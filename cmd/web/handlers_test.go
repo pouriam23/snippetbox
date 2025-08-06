@@ -231,3 +231,36 @@ func TestUserSignup(t *testing.T) {
 		})
 	}
 }
+
+func TestSnippetCreate(t *testing.T) {
+	app := newTestApplication(t)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
+
+	t.Run("Unauthenticated", func(t *testing.T) {
+		code, headers, _ := ts.get(t, "/snippet/create")
+		assert.Equal(t, code, http.StatusSeeOther)
+		assert.Equal(t, headers.Get("Location"), "/user/login")
+	})
+
+	t.Run("Authenticated", func(t *testing.T) {
+		// 1. Get CSRF token
+		_, _, body := ts.get(t, "/user/login")
+		csrfToken := extractCSRFToken(t, body)
+
+		// 2. Log in with credentials
+		form := url.Values{}
+		form.Add("email", "pouriajafari23@gmail.com")
+		form.Add("password", "pouriam2323")
+		form.Add("csrf_token", csrfToken)
+	// Verify login succeeded before accessing authenticated routes
+	code, headers, _ := ts.postForm(t, "/user/login", form)
+	assert.Equal(t, code, http.StatusSeeOther)
+	assert.Equal(t, headers.Get("Location"), "/snippet/create")
+
+		// 3. Make authenticated request to /snippet/create
+		code, _, body := ts.get(t, "/snippet/create")
+		assert.Equal(t, code, http.StatusOK)
+		assert.StringContains(t, body, "<form action='/snippet/create' method='POST'>")
+	})
+}
