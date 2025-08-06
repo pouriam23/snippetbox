@@ -1,6 +1,9 @@
 package mocks
 
-import "snippetbox.alexedwards.net/internal/models"
+import (
+	"snippetbox.alexedwards.net/internal/models"
+	"time"
+)
 
 var mockUser = &models.User{}
 
@@ -28,5 +31,19 @@ func (m *UserModel) Exists(id int) (bool, error) {
 		return true, nil // user exists
 	default:
 		return false, nil // user does not exist
+	}
+}
+
+func (m *UserModel) Get(id int) (*models.User, error) {
+	switch id {
+	case 1:
+		return &models.User{
+			ID:      1,
+			Name:    "Alice",
+			Email:   "alice@example.com",
+			Created: time.Now(),
+		}, nil
+	default:
+		return nil, models.ErrNoRecord
 	}
 }
