@@ -1,2 +1,2 @@
 drop table if exists users;
-drop table if exists snippets;
+drop table if exists snippets;  
