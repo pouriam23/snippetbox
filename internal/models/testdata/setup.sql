@@ -1,4 +1,4 @@
-create table snippets (
+create table if not exists snippets (
     id integer not null primary key auto_increment,
     title varchar(100) not null,
     content text not null,
