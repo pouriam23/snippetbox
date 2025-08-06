@@ -223,12 +223,13 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
-	path := app.sessionManager.PopString(r.Context(), "redirectPathAfterLogin")
+path := app.sessionManager.PopString(r.Context(), "redirectPathAfterLogin")
 
-	if path != "" {
-		http.Redirect(w, r, path, http.StatusSeeOther)
-	}
-	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+if path != "" {
+    http.Redirect(w, r, path, http.StatusSeeOther)
+    return
+}
+http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
