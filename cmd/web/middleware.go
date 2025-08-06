@@ -56,7 +56,13 @@ func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !app.isAuthenticated(r) {
 			// Only save internal paths to prevent open redirects
-			if path := r.URL.Path; path != "" && path[0] == '/' && !strings.Contains(path, "//") {
+import (
+	"context"
+	"fmt"
+	"github.com/justinas/nosurf"
+	"net/http"
+	"strings"
+)
 				app.sessionManager.Put(r.Context(), "redirectPathAfterLogin", path)
 			}
 
