@@ -16,7 +16,6 @@ func ping(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-
 	// Get the latest snippets from the database.
 	snippets, err := app.snippet.Latest()
 	if err != nil {
@@ -29,6 +28,11 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 	app.render(w, http.StatusOK, "home.html", data)
 
+}
+
+func (app *application) about(w http.ResponseWriter, r *http.Request) {
+	data := app.newTemplateData(r)
+	app.render(w, http.StatusOK, "about.html", data)
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
