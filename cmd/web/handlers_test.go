@@ -253,7 +253,10 @@ func TestSnippetCreate(t *testing.T) {
 		form.Add("email", "pouriajafari23@gmail.com")
 		form.Add("password", "pouriam2323")
 		form.Add("csrf_token", csrfToken)
-		ts.postForm(t, "/user/login", form)
+	// Verify login succeeded before accessing authenticated routes
+	code, headers, _ := ts.postForm(t, "/user/login", form)
+	assert.Equal(t, code, http.StatusSeeOther)
+	assert.Equal(t, headers.Get("Location"), "/snippet/create")
 
 		// 3. Make authenticated request to /snippet/create
 		code, _, body := ts.get(t, "/snippet/create")
