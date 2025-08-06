@@ -1,32 +1,30 @@
 package main
 
 import (
+	"bytes"
+	"io"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"snippetbox.alexedwards.net/internal/assert"
 	"testing"
 )
 
 // unit testing
-/*func TestPing(t *testing.T) {
+func TestPingUnit(t *testing.T) {
 	// Create a new ResponseRecorder
 	rr := httptest.NewRecorder()
-
 
 	r, err := http.NewRequest(http.MethodGet, "/", nil)
 	if err != nil {
 		t.Fatal(err) // Stop the test if the request can't be created
 	}
 
-
 	ping(rr, r)
-
 
 	rs := rr.Result()
 
-
 	assert.Equal(t, rs.StatusCode, http.StatusOK)
-
 
 	defer rs.Body.Close()
 	body, err := io.ReadAll(rs.Body)
@@ -37,7 +35,7 @@ import (
 	bytes.TrimSpace(body)
 
 	assert.Equal(t, string(body), "OK")
-}*/
+}
 
 // E2E testing
 func TestPing(t *testing.T) {

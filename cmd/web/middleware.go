@@ -52,6 +52,27 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !app.isAuthenticated(r) {
+func (app *application) requireAuthentication(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !app.isAuthenticated(r) {
+			// Only save internal paths to prevent open redirects
+import (
+	"context"
+	"fmt"
+	"github.com/justinas/nosurf"
+	"net/http"
+	"strings"
+)
+				app.sessionManager.Put(r.Context(), "redirectPathAfterLogin", path)
+			}
+
+			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 			return
 		}
